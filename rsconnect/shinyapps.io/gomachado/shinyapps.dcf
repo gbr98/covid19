@@ -1,0 +1,10 @@
+name: shinyapps
+title:
+username:
+account: gomachado
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2047577
+bundleId: 2962363
+url: https://gomachado.shinyapps.io/shinyapps/
+when: 1585880639.41718
