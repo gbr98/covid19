@@ -15,7 +15,9 @@ a <- function(t, ti, tf, r){
 }
 
 f <- function(t, e){
-  return(e * exp(t/3.0)) # ajustar exponencial
+  c0 <- 152567.09732699374
+  c1 <- 0.09612054439208724
+  return(e * c0 * exp(t * c1))
 }
 
 brusselator <- function(t, y, p) {
@@ -38,7 +40,7 @@ server <- function(input, output) {
     I0 <- input$In0 / input$theta
     S0 <- input$N - I0
     parms <- c(ti=input$ti, tf=input$tf, r=input$r, e=input$e, b=input$b, beta=beta, gamma=gamma, N=input$N)
-    resultado <- ode(y = c(S=S0, I=I0, R=0, O=input$O0), times=seq(0, 10, .1), brusselator, parms)[,c(1,3,4,5)]
+    resultado <- ode(y = c(S=S0, I=I0, R=0, O=input$O0), times=seq(0, input$Tf, .1), brusselator, parms)[,c(1,3,4,5)]
     matplot.0D(resultado)
   })
 }
@@ -46,6 +48,7 @@ server <- function(input, output) {
 ui <- fluidPage(
   titlePanel("Modelo de Predição do Número de Casos de COVID-19"),
   plotOutput("brussels"),
+  numericInput("Tf", label = "Tf", value = 10), # tempo final da simulação
   numericInput("b", label = "b", value = 0.381), # taxa de infecção
   numericInput("theta", label = "theta", value = 0.0812), # percentual de casos notificados
   numericInput("r", label = "r", value = 0.58), # fator de redução da taxa de contato
@@ -59,8 +62,8 @@ ui <- fluidPage(
   numericInput("t3", label = "t3", value = 7.1), # tempo dos sintomas à recuperação
   numericInput("e", label = "e", value = 0.46*10^-6), # taxa de migração afetada pelas políticas de restrição
   numericInput("N", label = "N", value = 2.093*10^8), #população
-  numericInput("In0", label = "In0", value = 2000), #casos notificados inicialmente
-  numericInput("O0", label = "O0", value = 150) #mortes iniciais
+  numericInput("In0", label = "In0", value = 10), #casos notificados inicialmente
+  numericInput("O0", label = "O0", value = 0) #mortes iniciais
 )
 
 shinyApp(ui=ui, server=server)
